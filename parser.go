@@ -1,7 +1,6 @@
 package iniparser
 
 import (
-	"bitbucket.org/kardianos/osext"
 	"bufio"
 	"errors"
 	"os"
@@ -22,9 +21,10 @@ type Section struct {
 
 func (conf *Config) LoadFile(fileName string) error {
 	if filepath.Dir(fileName) == "." {
-		path, err := osext.ExecutableFolder()
-		if err != nil {
-			return err
+		pos := strings.LastIndex(os.Args[0], string(filepath.Separator))
+		path := os.Args[0][0 : pos+1]
+		if path == "" {
+			return errors.New("Unable to get application path.")
 		}
 
 		fileName = filepath.Join(path, fileName)
