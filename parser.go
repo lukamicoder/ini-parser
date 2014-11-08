@@ -21,8 +21,9 @@ type Section struct {
 
 func (conf *Config) LoadFile(fileName string) error {
 	if filepath.Dir(fileName) == "." {
-		pos := strings.LastIndex(os.Args[0], string(filepath.Separator))
-		path := os.Args[0][0 : pos+1]
+		fullPath, _ := filepath.Abs(os.Args[0])
+		pos := strings.LastIndex(fullPath, string(filepath.Separator))
+		path := fullPath[0 : pos+1]
 
 		fileName = filepath.Join(path, fileName)
 	}
