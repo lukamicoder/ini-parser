@@ -9,19 +9,19 @@ import (
 	"strings"
 )
 
-//Represents the configurations in the ini file
+//Config represents the configurations in the ini file
 type Config struct {
 	FileName string
 	Sections []*Section
 }
 
-//Represents a section
+//Section represents a section
 type Section struct {
 	Name string
 	Keys map[string]string
 }
 
-//Loads and parses an ini file
+//LoadFile loads and parses an ini file
 func (conf *Config) LoadFile(fileName string) error {
 	if filepath.Dir(fileName) == "." {
 		fullPath, _ := filepath.Abs(os.Args[0])
@@ -87,15 +87,15 @@ func (conf *Config) parseLine(line string) error {
 		return errors.New("Failed to parse key line: " + line)
 	}
 
-	name := line[0:pos]
-	val := line[pos + 1 : len(line)]
+	name := strings.TrimSpace(line[0:pos])
+	val := strings.TrimSpace(line[pos + 1 : len(line)])
 
 	conf.Sections[len(conf.Sections) - 1].Keys[name] = val
 
 	return nil
 }
 
-//Returns a section
+//GetSection returns a section
 func (conf *Config) GetSection(name string) (*Section, error) {
 	for _, section := range conf.Sections {
 		if section.Name == name {
@@ -106,12 +106,12 @@ func (conf *Config) GetSection(name string) (*Section, error) {
 	return nil, errors.New("Section not found: " + name)
 }
 
-//Returns a list of all sections
+//GetSections returns a list of all sections
 func (conf *Config) GetSections() []*Section {
 	return conf.Sections
 }
 
-//Returns a string value of a key in a section
+//GetString returns a string value of a key in a section
 func (conf *Config) GetString(section string, key string) (string, error) {
 	sec, err := conf.GetSection(section)
 	if err != nil {
@@ -126,7 +126,7 @@ func (conf *Config) GetString(section string, key string) (string, error) {
 	return val, nil
 }
 
-//Returns a boolean value of a key in a section
+//GetBool returns a boolean value of a key in a section
 func (conf *Config) GetBool(section string, key string) (bool, error) {
 	value, err := conf.GetString(section, key)
 	if err != nil {
@@ -136,7 +136,7 @@ func (conf *Config) GetBool(section string, key string) (bool, error) {
 	return strconv.ParseBool(value)
 }
 
-//Returns an integer value of a key in a section
+//GetInt returns an integer value of a key in a section
 func (conf *Config) GetInt(section string, key string) (int, error) {
 	value, err := conf.GetString(section, key)
 	if err != nil {
@@ -146,7 +146,7 @@ func (conf *Config) GetInt(section string, key string) (int, error) {
 	return strconv.Atoi(value)
 }
 
-//Returns a 64-bit integer value of a key in a section
+//GetInt64 returns a 64-bit integer value of a key in a section
 func (conf *Config) GetInt64(section string, key string) (int64, error) {
 	value, err := conf.GetString(section, key)
 	if err != nil {
@@ -156,7 +156,7 @@ func (conf *Config) GetInt64(section string, key string) (int64, error) {
 	return strconv.ParseInt(value, 10, 64)
 }
 
-//Returns a 64-bit float value of a key in a section
+//GetFloat64 returns a 64-bit float value of a key in a section
 func (conf *Config) GetFloat64(section string, key string) (float64, error) {
 	value, err := conf.GetString(section, key)
 	if err != nil {
