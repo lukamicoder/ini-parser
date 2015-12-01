@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"lukamicoder/ini-parser"
+	"github.com/lukamicoder/ini-parser"
 )
 
 func main() {
